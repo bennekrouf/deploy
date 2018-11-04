@@ -1,0 +1,40 @@
+#!/bin/sh
+
+API=$2-api
+WEB=$2-web
+BRANCH_DEVELOP=develop
+BRANCH_STAGING=staging
+BRANCH_DEMO=master
+BRANCH_PRODUCTION=master
+
+if [ "$#" -ne 2 ]
+then
+  echo "Usage: deploy [env] [project] - env is develop, staging, demo, production - project can be ejust supervision concreet..."
+  exit 1
+fi
+
+  case $1 in
+	develop)
+		BRANCH=$BRANCH_DEVELOP
+		;;
+	staging)
+		BRANCH=$BRANCH_STAGING
+		break
+		;;
+        demo)
+                BRANCH=$BRANCH_DEMO
+                break
+                ;;
+        production)
+                BRANCH=$BRANCH_PRODUCTION
+                break
+                ;;
+	*)
+		BRANCH=develop
+		;;
+  esac
+
+RUN_PM2=`cd $HOME/$BRANCH/$API && NODE_ENV=$BRANCH SHOW_EXPLORER=true pm2 start server/server.js --name $BRANCH-$2`
+RESTART_PM2=`pm2 restart $BRANCH-$2`
+
+(cd $HOME/src/$API && git co $BRANCH && git reset --hard origin/$BRANCH && git clean -f && git pull origin $BRANCH && yarn && rm -Rf $HOME/$BRANCH/$API && mkdir -p $HOME/$BRANCH/$API/client && cp -a * $HOME/$BRANCH/$API) && (cd $HOME/src/$WEB && git co $BRANCH && git reset --hard origin/$BRANCH && git clean -f && rm -Rf build && git pull origin $BRANCH && yarn && yarn run build && cp -a $HOME/src/$WEB/build/* $HOME/$BRANCH/$API/client) && $RUN_PM2 && $RESTART_PM2
