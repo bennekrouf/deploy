@@ -34,7 +34,11 @@ fi
 		;;
   esac
 
-RUN_PM2=`cd $HOME/$BRANCH/$API && NODE_ENV=$BRANCH SHOW_EXPLORER=true pm2 start server/server.js --name $BRANCH-$2`
-RESTART_PM2=`pm2 restart $BRANCH-$2`
+RUN_PM2="cd $HOME/$2/$BRANCH/$API && NODE_ENV=$BRANCH NODE_SUPERVISION_ENV=$BRANCH SHOW_EXPLORER=true pm2 start server/server.js --name $BRANCH-$2"
 
-(cd $HOME/src/$API && git co $BRANCH && git reset --hard origin/$BRANCH && git clean -f && git pull origin $BRANCH && yarn && rm -Rf $HOME/$BRANCH/$API && mkdir -p $HOME/$BRANCH/$API/client && cp -a * $HOME/$BRANCH/$API) && (cd $HOME/src/$WEB && git co $BRANCH && git reset --hard origin/$BRANCH && git clean -f && rm -Rf build && git pull origin $BRANCH && yarn && yarn run build && cp -a $HOME/src/$WEB/build/* $HOME/$BRANCH/$API/client) && $RUN_PM2 && $RESTART_PM2
+RESTART_PM2="pm2 restart $BRANCH-$2"
+
+GIT_RESET="git reset --hard origin/$BRANCH && git clean -f"
+GIT_CO="git co $BRANCH"
+GIT_PULL="git pull origin $BRANCH"
+(mkdir -p $HOME/$2/$BRANCH/$API && cd $HOME/src/$API && eval $GIT_CO && eval $GIT_RESET && git clean -f && eval $GIT_PULL && yarn && rm -Rf $HOME/$2/$BRANCH/$API && mkdir -p $HOME/$2/$BRANCH/$API/client && cp -a * $HOME/$2/$BRANCH/$API) && (cd $HOME/src/$WEB && eval $GIT_RESET && rm -Rf build && git pull origin $BRANCH && yarn && yarn run build && cp -a $HOME/src/$WEB/build/* $HOME/$2/$BRANCH/$API/client && eval $RUN_PM2 && eval $RESTART_PM2)
