@@ -2,43 +2,45 @@
 
 API=$2-api
 WEB=$2-web
-BRANCH_DEVELOP=develop
-BRANCH_STAGING=staging
-BRANCH_DEMO=master
-BRANCH_PRODUCTION=master
 
 if [ "$#" -ne 2 ]
 then
-  echo "Usage: deploy [env] [project] - env is develop, staging, demo, production - project can be ejust supervision concreet..."
+  echo "Usage: deploy [env] [project] - env is develop, staging, demo, production - project can be supervision concreet..."
   exit 1
 fi
 
   case $1 in
 	develop)
-		BRANCH=$BRANCH_DEVELOP
+		BRANCH=develop
+		ENV=develop
 		;;
 	staging)
-		BRANCH=$BRANCH_STAGING
+		BRANCH=staging
+		ENV=staging
 		break
 		;;
         demo)
-                BRANCH=$BRANCH_DEMO
-                break
+                BRANCH=master
+                ENV=demo
+		break
                 ;;
         production)
-                BRANCH=$BRANCH_PRODUCTION
+                BRANCH=master
+		ENV=production
                 break
                 ;;
 	*)
-		BRANCH=develop
+		echo "This environment do not exist : "$1
+		echo "Usage: deploy [env] [project] - env is develop, staging, demo, production - project can be ejust supervision concreet..."		
+		exit 1
 		;;
   esac
 
-RUN_PM2="cd $HOME/$2/$BRANCH/$API && NODE_ENV=$BRANCH NODE_SUPERVISION_ENV=$BRANCH SHOW_EXPLORER=true pm2 start server/server.js --name $BRANCH-$2"
+RUN_PM2="cd $HOME/$2/$ENV/$API && NODE_ENV=$ENV NODE_SUPERVISION_ENV=$ENV SHOW_EXPLORER=true pm2 start server/server.js --name $ENV-$2"
 
 RESTART_PM2="pm2 restart $BRANCH-$2"
 
 GIT_RESET="git reset --hard origin/$BRANCH && git clean -f"
 GIT_CO="git co $BRANCH"
 GIT_PULL="git pull origin $BRANCH"
-(mkdir -p $HOME/$2/$BRANCH/$API && cd $HOME/src/$API && eval $GIT_CO && eval $GIT_RESET && git clean -f && eval $GIT_PULL && yarn && rm -Rf $HOME/$2/$BRANCH/$API && mkdir -p $HOME/$2/$BRANCH/$API/client && cp -a * $HOME/$2/$BRANCH/$API) && (cd $HOME/src/$WEB && eval $GIT_RESET && rm -Rf build && git pull origin $BRANCH && yarn && yarn run build && cp -a $HOME/src/$WEB/build/* $HOME/$2/$BRANCH/$API/client && eval $RUN_PM2 && eval $RESTART_PM2)
+(mkdir -p $HOME/$2/$ENV/$API && cd $HOME/src/$API && eval $GIT_RESET && eval $GIT_CO && eval $GIT_PULL && yarn && rm -Rf $HOME/$2/$ENV/$API && mkdir -p $HOME/$2/$ENV/$API/client && cp -a * $HOME/$2/$ENV/$API) && (cd $HOME/src/$WEB && eval $GIT_RESET && rm -Rf build && eval $GIT_PULL && yarn && yarn run build && cp -a $HOME/src/$WEB/build/* $HOME/$2/$ENV/$API/client && eval $RUN_PM2 && eval $RESTART_PM2)
