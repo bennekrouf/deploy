@@ -36,11 +36,11 @@ fi
 		;;
   esac
 
-RUN_PM2="cd $HOME/$2/$ENV/$API && NODE_ENV=$ENV NODE_SUPERVISION_ENV=$ENV SHOW_EXPLORER=true pm2 start server/server.js --name $ENV-$2"
+RUN_PM2="cd $HOME/$2/$ENV/$API && pm2 delete $ENV-$2 && NODE_ENV=$ENV pm2 start server/ecosystem.config.js --name $ENV-$2"
 
 RESTART_PM2="pm2 restart $BRANCH-$2"
 
 GIT_RESET="git reset --hard origin/$BRANCH && git clean -f"
-GIT_CO="git co $BRANCH"
-GIT_PULL="git pull origin $BRANCH"
-(mkdir -p $HOME/$2/$ENV/$API && cd $HOME/src/$API && eval $GIT_RESET && eval $GIT_CO && eval $GIT_PULL && yarn && rm -Rf $HOME/$2/$ENV/$API && mkdir -p $HOME/$2/$ENV/$API/client && cp -a * $HOME/$2/$ENV/$API) && (cd $HOME/src/$WEB && eval $GIT_RESET && rm -Rf build && eval $GIT_PULL && yarn && yarn run build && cp -a $HOME/src/$WEB/build/* $HOME/$2/$ENV/$API/client && eval $RUN_PM2 && eval $RESTART_PM2)
+GIT_CO="git co $BRANCH && git pull origin $BRANCH && npm ci"
+COPY_BUNDLE="cp -a $HOME/src/$WEB/build/* $HOME/$2/$ENV/$API/client"
+(mkdir -p $HOME/$2/$ENV/$API && cd $HOME/src/$API && eval $GIT_RESET && eval $GIT_CO && rm -Rf $HOME/$2/$ENV/$API && mkdir -p $HOME/$2/$ENV/$API/client && cp -a * $HOME/$2/$ENV/$API) && (cd $HOME/src/$WEB && eval $GIT_RESET && eval $GIT_CO && rm -Rf build && eval $GIT_PULL && npm run build:$ENV && eval $COPY_BUNDLE && eval $RUN_PM2 && eval $RESTART_PM2)
