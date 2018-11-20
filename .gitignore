@@ -21,3 +21,7 @@ supervision-api
 .sudo_as_admin_successful
 .viminfo
 .yarnrc
+.git-credentials
+.selected_editor
+.tmux.conf
+.wget-hsts

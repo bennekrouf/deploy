@@ -1,0 +1,44 @@
+#!/bin/sh
+
+MESSAGE="Usage: deploy [env] [tenant-ID] - env is develop, staging, demo, production - tenant is foa, ejust, barreauxxx..."
+
+if [ "$#" -ne 2 ]
+then
+  echo $MESSAGE
+  exit 1
+fi
+
+  case $1 in
+	develop)
+		BRANCH=develop
+		ENV=develop
+		BACKEND_URL=http://develop.ejust.law
+		;;
+	staging)
+		BRANCH=staging
+		ENV=staging
+		BACKEND_URL=http://staging-ejust.cleverapps.io
+		break
+		;;
+        demo)
+                BRANCH=master
+                ENV=demo
+		BACKEND_URL=http://demo.ejust.law
+		break
+                ;;
+        production)
+                BRANCH=master
+		ENV=production
+		BACKEND_URL=http://arbitration.ejust.law
+                break
+                ;;
+	*)
+		echo "This environment do not exist : "$1
+		echo $MESSAGE
+		exit 1
+		;;
+  esac
+
+GENERATE="TENANT=$2 EJUST_BACKEND_URL=$BACKEND_URL DESTINATION_PATH=/home/mohamed/ejust/$ENV/$2 webpack --config webpack.exp.config.js --profile --colors"
+GIT_CO="git co $BRANCH && git pull origin $BRANCH && npm install"
+cd src/ejust-web && eval $GIT_CO && eval $GENERATE
