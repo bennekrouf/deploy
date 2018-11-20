@@ -65,3 +65,17 @@
    65  cd deploy/
    66  ls
    67  history > init-node-vm-commands
+   68  more init-node-vm-commands 
+   69  git status
+   70  git add .
+   71  git commit -m "Add init command for node file"
+   72  git config --global --edit
+   73  cd
+   74  echo "export VISUAL=vim" >> ~/.profile
+   75  echo "export EDITOR="$VISUAL"" >> ~/.profile
+   76  echo "export EDITOR="$VISUAL" >> ~/.profile
+   77  . ~/.profile
+   78  git config --global --edit
+   79  cd deploy/
+   80  ls
+   81  history > init-node-vm-commands
