@@ -25,3 +25,6 @@ supervision-api
 .selected_editor
 .tmux.conf
 .wget-hsts
+.lesshst
+.rnd
+.vim

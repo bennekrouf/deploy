@@ -8,11 +8,16 @@ then
   exit 1
 fi
 
+echo 'Current tenants : '
+for d in /home/mohamed/ejust/*$ENV/*/ ; do
+    echo "$(basename $d)"
+done
+
   case $1 in
 	develop)
 		BRANCH=develop
 		ENV=develop
-		BACKEND_URL=http://develop.ejust.law
+		BACKEND_URL=http://develop-api.ejust.law
 		;;
 	staging)
 		BRANCH=staging
@@ -40,5 +45,5 @@ fi
   esac
 
 GENERATE="TENANT=$2 EJUST_BACKEND_URL=$BACKEND_URL DESTINATION_PATH=/home/mohamed/ejust/$ENV/$2 webpack --config webpack.exp.config.js --profile --colors"
-GIT_CO="git co $BRANCH && git pull origin $BRANCH && npm install"
+GIT_CO="git clean -f && git co $BRANCH && git pull origin $BRANCH && npm install"
 cd src/ejust-web && eval $GIT_CO && eval $GENERATE
