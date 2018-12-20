@@ -1,5 +1,5 @@
 #!/bin/sh
-
+cd ..
 API=$2-api
 WEB=$2-web
 
@@ -36,7 +36,15 @@ fi
 		;;
   esac
 
-RUN_PM2="cd $HOME/$2/$ENV/$API && NODE_ENV=$ENV pm2 start server/ecosystem.config.js --env $ENV --name $ENV-$2"
+if [ -e server/ecosystem.config.js ]
+then
+    CONFIG_FILE=server/ecosystem.config.js
+else
+    CONFIG_FILE=server/server.js
+fi
+
+
+RUN_PM2="cd $HOME/$2/$ENV/$API && NODE_ENV=$ENV pm2 start $CONFIG_FILE --env $ENV --name $ENV-$2"
 
 echo 'Running :' $RUN_PM2
 
