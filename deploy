@@ -48,7 +48,7 @@ RUN_PM2="cd $HOME/$2/$ENV/$API && NODE_ENV=$ENV pm2 start $CONFIG_FILE --env $EN
 
 echo 'Running :' $RUN_PM2
 
-RESTART_PM2="pm2 restart $BRANCH-$2"
+RESTART_PM2="pm2 restart $ENV-$2"
 
 GIT_RESET="git reset --hard origin/$BRANCH && git clean -f"
 GIT_CO="git co $BRANCH && git pull origin $BRANCH && npm i"
