@@ -28,3 +28,5 @@ supervision-api
 .lesshst
 .rnd
 .vim
+.node-gyp/
+data.tar.gz

@@ -1,17 +1,12 @@
 #!/bin/sh
 
-MESSAGE="Usage: deploy [env] [tenant-ID] - env is develop, staging, demo, production - tenant is foa, ejust, barreauxxx..."
+MESSAGE="Usage: deploy [env] - env is develop, staging, demo, production"
 
-if [ "$#" -ne 2 ]
+if [ "$#" -ne 1 ]
 then
   echo $MESSAGE
   exit 1
 fi
-
-echo 'Current tenants : '
-for d in /home/mohamed/ejust/*$ENV/*/ ; do
-    echo "$(basename $d)"
-done
 
   case $1 in
 	develop)
@@ -44,6 +39,11 @@ done
 		;;
   esac
 
-GENERATE="TENANT=$2 EJUST_BACKEND_URL=$BACKEND_URL DESTINATION_PATH=/home/mohamed/ejust/$ENV/$2 webpack --config webpack.exp.config.js --profile --colors"
 GIT_CO="git clean -f && git co $BRANCH && git pull origin $BRANCH && npm install"
-cd src/ejust-web && eval $GIT_CO && eval $GENERATE
+cd src/ejust-web && eval $GIT_CO
+
+for d in /home/mohamed/ejust/*$ENV/*/ ; do
+	echo "GENERATE TENANT : $(basename $d)"
+	GENERATE="TENANT=$(basename $d) EJUST_BACKEND_URL=$BACKEND_URL DESTINATION_PATH=/home/mohamed/ejust/$ENV/$2 webpack --config webpack.exp.config.js --profile --colors"
+	eval $GENERATE
+done
