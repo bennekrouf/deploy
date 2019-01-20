@@ -30,3 +30,6 @@ supervision-api
 .vim
 .node-gyp/
 data.tar.gz
+.gnupg/
+.yarn/
+node_modules/

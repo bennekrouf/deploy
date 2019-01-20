@@ -44,6 +44,6 @@ cd src/ejust-web && eval $GIT_CO
 
 for d in /home/mohamed/ejust/*$ENV/*/ ; do
 	echo "GENERATE TENANT : $(basename $d)"
-	GENERATE="TENANT=$(basename $d) EJUST_BACKEND_URL=$BACKEND_URL DESTINATION_PATH=/home/mohamed/ejust/$ENV/$2 webpack --config webpack.exp.config.js --profile --colors"
+	GENERATE="TENANT=$(basename $d) EJUST_BACKEND_URL=$BACKEND_URL DESTINATION_PATH=/home/mohamed/ejust/$ENV/$(basename $d) webpack --config webpack.exp.config.js --profile --colors"
 	eval $GENERATE
 done

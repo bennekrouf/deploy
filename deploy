@@ -44,11 +44,12 @@ else
 fi
 
 
-RUN_PM2="cd $HOME/$2/$ENV/$API && NODE_ENV=$ENV pm2 start $CONFIG_FILE --env $ENV --name $ENV-$2"
+RUN_PM2="cd $HOME/$2/$ENV/$API && NODE_ENV=$ENV pm2 restart $ENV-$2"
+#RUN_PM2="cd $HOME/$2/$ENV/$API && NODE_ENV=$ENV pm2 start $CONFIG_FILE --env $ENV --name $ENV-$2"
 
 echo 'Running :' $RUN_PM2
 
-RESTART_PM2="pm2 restart $ENV-$2"
+RESTART_PM2="pm2 restart $ENV-$2 -f"
 
 GIT_RESET="git reset --hard origin/$BRANCH && git clean -f"
 GIT_CO="git co $BRANCH && git pull origin $BRANCH && npm i"
