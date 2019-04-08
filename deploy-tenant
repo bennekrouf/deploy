@@ -17,19 +17,19 @@ fi
 	staging)
 		BRANCH=staging
 		ENV=staging
-		BACKEND_URL=http://staging-ejust.cleverapps.io
+		BACKEND_URL=http://staging-api.ejust.law
 		break
 		;;
         demo)
                 BRANCH=master
                 ENV=demo
-		BACKEND_URL=http://demo.ejust.law
+		BACKEND_URL=http://demo-api.ejust.law
 		break
                 ;;
         production)
                 BRANCH=master
 		ENV=production
-		BACKEND_URL=http://arbitration.ejust.law
+		BACKEND_URL=http://api.ejust.law
                 break
                 ;;
 	*)
@@ -44,6 +44,6 @@ cd src/ejust-web && eval $GIT_CO
 
 for d in /home/mohamed/ejust/*$ENV/*/ ; do
 	echo "GENERATE TENANT : $(basename $d)"
-	GENERATE="TENANT=$(basename $d) EJUST_BACKEND_URL=$BACKEND_URL DESTINATION_PATH=/home/mohamed/ejust/$ENV/$(basename $d) webpack --config webpack.exp.config.js --profile --colors"
+	GENERATE="TENANT=$(basename $d) EJUST_BACKEND_URL=$BACKEND_URL DESTINATION_PATH=/home/mohamed/ejust/$ENV webpack --config webpack.exp.config.js --profile --colors"
 	eval $GENERATE
 done
