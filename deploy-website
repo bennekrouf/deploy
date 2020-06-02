@@ -1,1 +1,1 @@
-(cd src && cd website && git reset --hard && git pull && npm install && npm run build && pm2 restart website-beta)
+concreet-devops/deploy-website
