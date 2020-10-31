@@ -1,37 +1,33 @@
-deploy-dev
-develop
-src
-staging
-supervision-api
-
-
+grahamgroup
 .bash_history
-.bash_logout
-.bashrc
-.cache/
-.config/
-.gitconfig
-.node_repl_history
-.npm-global/
-.npm/
-.npmrc
-.pm2/
-.profile
-.ssh/
-.sudo_as_admin_successful
-.viminfo
-.yarnrc
-.git-credentials
-.selected_editor
-.tmux.conf
-.wget-hsts
-.lesshst
-.rnd
-.vim
-.node-gyp/
-data.tar.gz
-.gnupg/
-.yarn/
-node_modules/
-concreet
-ejust/
+	.bash_logout
+	.bashrc
+	.cache/
+	.config/
+	.git-credentials
+	.gitconfig
+	.gnupg/
+	.lesshst
+	.node-gyp/
+	.node_repl_history
+	.npm-global/
+	.npm/
+	.npmrc
+	.pm2/
+	.profile
+	.rnd
+	.selected_editor
+	.ssh/
+	.sudo_as_admin_successful
+	.tmux.conf
+	.vim/
+	.viminfo
+	.wget-hsts
+	.yarn/
+	.yarnrc
+	concreet/
+	git-octopus-1.4/	
+	src/
+	supervision/
+	website-tm/
+	website/
