@@ -1,33 +1,34 @@
+git-octopus-1.4/
 grahamgroup
 .bash_history
-	.bash_logout
-	.bashrc
-	.cache/
-	.config/
-	.git-credentials
-	.gitconfig
-	.gnupg/
-	.lesshst
-	.node-gyp/
-	.node_repl_history
-	.npm-global/
-	.npm/
-	.npmrc
-	.pm2/
-	.profile
-	.rnd
-	.selected_editor
-	.ssh/
-	.sudo_as_admin_successful
-	.tmux.conf
-	.vim/
-	.viminfo
-	.wget-hsts
-	.yarn/
-	.yarnrc
-	concreet/
-	git-octopus-1.4/	
-	src/
-	supervision/
-	website-tm/
-	website/
+.bash_logout
+.bashrc
+.cache/
+.config/
+.git-credentials
+.gitconfig
+.gnupg/
+.lesshst
+.node-gyp/
+.node_repl_history
+.npm-global/
+.npm/
+.npmrc
+.pm2/
+.profile
+.rnd
+.selected_editor
+.ssh/
+.sudo_as_admin_successful
+.tmux.conf
+.vim/
+.viminfo
+.wget-hsts
+.yarn/
+.yarnrc
+concreet/
+git-octopus-1.4/	
+src/
+supervision/
+website-tm/
+website/

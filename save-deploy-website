@@ -1,0 +1,9 @@
+#!/bin/sh
+
+if [ "$#" -ne 1 ]
+then
+  echo "Usage: deploy [project] - website or grahamgroup"
+  exit 1
+fi
+
+cd src && git clone git@bitbucket.org:concreet/$1.git && cd $1 && git checkout master && npm i && npm run build

@@ -1,0 +1,91 @@
+#!/bin/sh
+
+API=$2-api
+WEB=$2-web
+
+if [ "$#" -ne 2 ]
+then
+  echo "Usage: deploy [env] [project] - env is develop, staging, demo, production - project can be supervision concreet..."
+  exit 1
+fi
+
+  case $1 in
+	develop)
+		BRANCH=develop
+		ENV=develop
+		;;
+	staging)
+		BRANCH=staging
+		ENV=staging
+		break
+		;;
+        demo)
+                BRANCH=master
+                ENV=demo
+		break
+                ;;
+        app)
+                BRANCH=master
+                ENV=app
+                break
+                ;;
+        production)
+                BRANCH=master
+		ENV=production
+                break
+                ;;
+	*)
+		echo "This environment do not exist : "$1
+		echo "Usage: deploy [env] [project] - env is develop, staging, demo, production - project can be ejust supervision concreet..."		
+		exit 1
+		;;
+  esac
+
+CONFIG_FILE=server/server.js
+TEMP_FOLDER=$HOME/$2/$ENV/COPY/$API
+EXECUTION_FOLDER=$HOME/$2/$ENV/$API
+PM2=/home/mohamed/.npm-global/bin/pm2
+
+
+needNpmInstall () {
+  if [ -d "$1" ]
+  then
+    false
+  else
+    true
+  fi
+}
+
+archiveNodeModules () {
+  mkdir -p $1-nm-$BRANCH && cp -a $1/node_modules/. $1-nm-$BRANCH/
+}
+
+getNodeModules () {
+  if [ ! -d "$1-nm-$BRANCH"  ]
+  then
+    cd $1 && npm i && archiveNodeModules $1
+  else 
+    mkdir $1/node_modules && cp -a $1-nm-$BRANCH/. $1/node_modules/
+  fi
+}
+
+clone () {
+  rm -Rf $HOME/src/$1 && cd $HOME/src && git clone git@bitbucket.org:concreet/$1.git && cd $HOME/src/$1 && git checkout $BRANCH && cd $HOME/src && getNodeModules $HOME/src/$1
+}
+
+#if [ -e init]
+#then
+#    RUN_PM2="cd $HOME/$2/$ENV/$API && NODE_ENV=$ENV pm2 start $CONFIG_FILE --env $ENV --name $ENV-$2"
+#else
+   RUN_PM2="cd $EXECUTION_FOLDER && NODE_ENV=$ENV $PM2 restart $ENV-$2"
+#fi
+
+echo 'Running :' $RUN_PM2
+
+RESTART_PM2="$PM2 restart $ENV-$2 -f"
+
+COPY_BUNDLE="cp -a $HOME/src/$WEB/build/* $TEMP_FOLDER/client"
+COPY_TO_EXECUTION_FOLDER="rm -Rf $EXECUTION_FOLDER && mkdir -p $EXECUTION_FOLDER && cp -a $TEMP_FOLDER/* $EXECUTION_FOLDER"
+
+(rm -Rf $TEMP_FOLDER && mkdir -p $TEMP_FOLDER && mkdir -p $TEMP_FOLDER/client && clone $WEB && clone $API && cd $HOME/src/$API && cp -a * $TEMP_FOLDER) && (cd $HOME/src/$WEB && rm -Rf build && npm run build:$ENV && eval $COPY_BUNDLE && eval $COPY_TO_EXECUTION_FOLDER && eval $RUN_PM2)
+
