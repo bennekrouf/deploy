@@ -1,0 +1,13 @@
+#!/bin/sh
+
+if [ "$#" -ne 1 ]
+then
+  echo "Usage: run-deploy [project] - project can be supervision-api concreet-web..."
+  exit 1
+fi
+
+OCTOPUS="git octopus origin/feature/* origin/master && git push origin +HEAD:octopus"
+
+#cd $HOME/src/$1 && git branch -r && git push -d origin octopus && eval $OCTOPUS
+cd $HOME/src/$1 && git fetch --all && git branch -r && eval $OCTOPUS
+
