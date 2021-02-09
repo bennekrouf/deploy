@@ -1,9 +1,12 @@
 #!/bin/sh
 
-if [ "$#" -ne 1 ]
+if [ "$#" -ne 2 ]
 then
-  echo "Usage: deploy [project] - website or grahamgroup"
+  echo "Usage: deploy [project] [env] - website-tm or website or grahamgroup - staging production"
   exit 1
 fi
-
-cd src && cd $1 && git checkout master && npm i && npm run build
+OCTOPUS="./run-octopus $1"
+YARNME="rm -Rf node_modules && rm -Rf package-lock.json yarn.lock && yarn"
+COPY="cp -a * $HOME/$1/$2"
+BUILD="rm -Rf .next && yarn run build"
+eval $OCTOPUS && cd src && cd $1 && git checkout master && eval $COPY && cd $HOME/$1/$2 && eval $YARNME && eval $BUILD && pm2 restart $2-$1

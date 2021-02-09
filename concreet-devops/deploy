@@ -13,25 +13,30 @@ fi
 	develop)
 		BRANCH=develop
 		ENV=develop
+		OCTOPUS="./run-octopus $WEB && ./run-octopus $API"
 		;;
 	staging)
 		BRANCH=octopus
 		ENV=staging
+		OCTOPUS="./run-octopus $WEB && ./run-octopus $API"
 		break
 		;;
         demo)
                 BRANCH=master
                 ENV=demo
+		OCTOPUS="git status"
 		break
                 ;;
         app)
                 BRANCH=master
                 ENV=app
+		OCTOPUS="git status"
                 break
                 ;;
         production)
                 BRANCH=master
 		ENV=production
+		OCTOPUS="git status"
                 break
                 ;;
 	*)
@@ -70,7 +75,7 @@ getNodeModules () {
 }
 
 clone () {
-  rm -Rf $HOME/src/$1 && cd $HOME/src && git clone git@bitbucket.org:concreet/$1.git && cd $HOME/src/$1 && git checkout $BRANCH && cd $HOME/src && getNodeModules $HOME/src/$1
+rm -Rf $HOME/src/$1 && cd $HOME/src/ && git clone git@bitbucket.org:concreet/$1.git && cd $HOME/src/$1 && git checkout $BRANCH && cd $HOME/src && getNodeModules $HOME/src/$1
 }
 
 #if [ -e init]
@@ -83,9 +88,9 @@ clone () {
 echo 'Running :' $RUN_PM2
 
 RESTART_PM2="$PM2 restart $ENV-$2 -f"
-
 COPY_BUNDLE="cp -a $HOME/src/$WEB/build/* $TEMP_FOLDER/client"
 COPY_TO_EXECUTION_FOLDER="rm -Rf $EXECUTION_FOLDER && mkdir -p $EXECUTION_FOLDER && cp -a $TEMP_FOLDER/* $EXECUTION_FOLDER"
 
-(rm -Rf $TEMP_FOLDER && mkdir -p $TEMP_FOLDER && mkdir -p $TEMP_FOLDER/client && clone $WEB && clone $API && cd $HOME/src/$API && cp -a * $TEMP_FOLDER) && (cd $HOME/src/$WEB && rm -Rf build && npm run build:$ENV && eval $COPY_BUNDLE && eval $COPY_TO_EXECUTION_FOLDER && eval $RUN_PM2)
+(eval $OCTOPUS) &&
+(rm -Rf $TEMP_FOLDER && mkdir -p $TEMP_FOLDER && mkdir -p $TEMP_FOLDER/client && clone $WEB $2 && clone $API $2 && cd $HOME/src/$API && cp -a * $TEMP_FOLDER) && (cd $HOME/src/$WEB && rm -Rf build && npm run build:$ENV && eval $COPY_BUNDLE && eval $COPY_TO_EXECUTION_FOLDER && eval $RUN_PM2)
 
